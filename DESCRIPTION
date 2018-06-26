@@ -1,0 +1,13 @@
+Package: hswrite
+Title: use REST API to write data to HDF Cloud
+Description: use REST API to write data to HDF Cloud
+Version: 0.0.0
+Author: Vince Carey
+Suggests: knitr
+Depends: httr, rjson
+Maintainer: VJ Carey <stvjc@channing.harvard.edu>
+License: Artistic-2.0
+LazyLoad: yes
+biocViews: Infrastructure
+VignetteBuilder: knitr
+RoxygenNote: 6.0.1
