@@ -23,7 +23,8 @@ Function to delete a file on hdf server
 \examples{
 if (nchar(Sys.getenv("password"))>0) {
   tstring = sub("\\\\/", "", tempfile(tmpdir=""))
-  dom = deleteDomain("http://170.223.248.164:7248", paste(tstring, ".hdfgroup.org", sep=""))
-  readBin(dom$content, what="character")
+  dom = putDomain("http://170.223.248.164:7248", paste(tstring, ".hdfgroup.org", sep=""))
+  delDom = deleteDomain("http://170.223.248.164:7248", paste(tstring, ".hdfgroup.org", sep=""))
+  readBin(delDom$content, what="character")
   }
 }

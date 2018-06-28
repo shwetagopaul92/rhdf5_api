@@ -26,8 +26,9 @@ putDomain = function(url, domain){
 #' @examples
 #' if (nchar(Sys.getenv("password"))>0) {
 #'   tstring = sub("\\/", "", tempfile(tmpdir=""))
-#'   dom = deleteDomain("http://170.223.248.164:7248", paste(tstring, ".hdfgroup.org", sep=""))
-#'   readBin(dom$content, what="character")
+#'   dom = putDomain("http://170.223.248.164:7248", paste(tstring, ".hdfgroup.org", sep=""))
+#'   delDom = deleteDomain("http://170.223.248.164:7248", paste(tstring, ".hdfgroup.org", sep=""))
+#'   readBin(delDom$content, what="character")
 #'   }
 #' @export
 deleteDomain = function(url, domain){
@@ -67,10 +68,6 @@ postDataset = function(url, domain, type, shape, maxdims){
   r
 }
 
-#To grab UUID of dataset created :
-#r = GET(url="http://170.223.248.164:7248/datasets",add_headers(host=domain))
-#content(r)$datasets
-
 #' Function to modify dataset shape
 #' @param url character string with http server url
 #' @note \url{"http://170.223.248.164:7248/datasets/dsetuuid/shape"}
@@ -85,9 +82,12 @@ postDataset = function(url, domain, type, shape, maxdims){
 #'         domain=paste(tstring, ".hdfgroup.org", sep=""),  
 #'         type="H5T_IEEE_F32LE",
 #'         shape=c(10,5), maxdims=c(0,5))
+#'     response = GET(url="http://170.223.248.164:7248/datasets",
+#'               add_headers(host=paste(tstring, ".hdfgroup.org", sep="")))
+#'     dsetuuid = content(response)$datasets[[1]]     # taking the first dataset id
 #'     modShape = modifyShape(url=paste0("http://170.223.248.164:7248/datasets/",dsetuuid,"/shape"),
 #'               domain=paste(tstring, ".hdfgroup.org", sep=""), newshape=c(20,5))
-#'     ans = readBin(ds$content, what="character")
+#'     ans = readBin(modShape$content, what="character")
 #'     ans
 #'     }
 #' @export
@@ -118,12 +118,17 @@ modifyShape = function(url, domain, newshape){
 #'         domain=paste(tstring, ".hdfgroup.org", sep=""),  
 #'         type="H5T_IEEE_F32LE",
 #'         shape=c(2,2), maxdims=c(0,0))
+#'     response = GET(url="http://170.223.248.164:7248/datasets",
+#'               add_headers(host=paste(tstring, ".hdfgroup.org", sep="")))
+#'     dsetuuid = content(response)$datasets[[1]]     # taking the first dataset id
 #'     modShape = modifyShape(url=paste0("http://170.223.248.164:7248/datasets/",dsetuuid,"/shape"),
 #'               domain=paste(tstring, ".hdfgroup.org", sep=""), newshape=c(3,3))
 #'     mymat = matrix(1:12, nrow=4, ncol=4)
 #'     insertVal = putValue(url=paste0("http://170.223.248.164:7248/datasets/",dsetuuid,"/value",),
 #'                domain=paste(tstring, ".hdfgroup.org", sep=""), value=mymat,
 #'                start=c(0,0),stop=c(4,4),step=c(1,1))
+#'     ans = readBin(insertVal$content, what="character")
+#'     ans
 #'     }
 #' @export
 putValue = function(url, domain, value, start, stop, step){

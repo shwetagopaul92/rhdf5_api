@@ -30,9 +30,12 @@ if (nchar(Sys.getenv("password"))>0) {
         domain=paste(tstring, ".hdfgroup.org", sep=""),  
         type="H5T_IEEE_F32LE",
         shape=c(10,5), maxdims=c(0,5))
+    response = GET(url="http://170.223.248.164:7248/datasets",
+              add_headers(host=paste(tstring, ".hdfgroup.org", sep="")))
+    dsetuuid = content(response)$datasets[[1]]     # taking the first dataset id
     modShape = modifyShape(url=paste0("http://170.223.248.164:7248/datasets/",dsetuuid,"/shape"),
               domain=paste(tstring, ".hdfgroup.org", sep=""), newshape=c(20,5))
-    ans = readBin(ds$content, what="character")
+    ans = readBin(modShape$content, what="character")
     ans
     }
 }
