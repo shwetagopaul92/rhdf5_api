@@ -11,7 +11,6 @@
 #'   }
 #' @export
 putDomain = function(url, domain){
-  require(httr)
   password = Sys.getenv("password")
   username = Sys.getenv("username")
   auth <- authenticate(username, password, type="basic")
@@ -32,7 +31,6 @@ putDomain = function(url, domain){
 #'   }
 #' @export
 deleteDomain = function(url, domain){
-  require(httr)
   password = Sys.getenv("password")
   username = Sys.getenv("username")
   auth <- authenticate(username, password, type="basic")
@@ -61,7 +59,6 @@ deleteDomain = function(url, domain){
 #'     }
 #' @export
 postDataset = function(url, domain, type, shape, maxdims){
-  require(httr)
   password = Sys.getenv("password")
   username = Sys.getenv("username")
   auth <- authenticate(username, password, type="basic")
@@ -81,7 +78,7 @@ postDataset = function(url, domain, type, shape, maxdims){
 #' @param newshape numeric vector with new dataset new dataset shape (works for a resizeable dataset)
 #' @return r http response object
 #' @examples
-#' #' if (nchar(Sys.getenv("password"))>0) {
+#' if (nchar(Sys.getenv("password"))>0) {
 #'     tstring = sub("\\/", "", tempfile(tmpdir=""))
 #'     dom = putDomain("http://170.223.248.164:7248", paste(tstring, ".hdfgroup.org", sep=""))
 #'     ds = postDataset(url="http://170.223.248.164:7248/datasets",
@@ -95,7 +92,6 @@ postDataset = function(url, domain, type, shape, maxdims){
 #'     }
 #' @export
 modifyShape = function(url, domain, newshape){
-  require(httr)
   password = Sys.getenv("password")
   username = Sys.getenv("username")
   auth <- authenticate(username, password, type="basic")
@@ -115,7 +111,7 @@ modifyShape = function(url, domain, newshape){
 #' @param step (optional)numeric vector with step value
 #' @return r http response object
 #' @examples
-#' #' #' if (nchar(Sys.getenv("password"))>0) {
+#' if (nchar(Sys.getenv("password"))>0) {
 #'     tstring = sub("\\/", "", tempfile(tmpdir=""))
 #'     dom = putDomain("http://170.223.248.164:7248", paste(tstring, ".hdfgroup.org", sep=""))
 #'     ds = postDataset(url="http://170.223.248.164:7248/datasets",
@@ -130,8 +126,7 @@ modifyShape = function(url, domain, newshape){
 #'                start=c(0,0),stop=c(4,4),step=c(1,1))
 #'     }
 #' @export
-putValue = function(url, domain, value, start, stop){
-  require(httr)
+putValue = function(url, domain, value, start, stop, step){
   password = Sys.getenv("password")
   username = Sys.getenv("username")
   auth <- authenticate(username, password, type="basic")
