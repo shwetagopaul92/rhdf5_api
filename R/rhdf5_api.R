@@ -19,13 +19,34 @@ putDomain = function(url, domain){
   r
 }
 
+#' Function to delete a file on hdf server
+#' @param url character string with http server url
+#' @note \url{"http://170.223.248.164:7248"}
+#' @param domain character string with domain name to be created
+#' @return r http response object
+#' @examples
+#' if (nchar(Sys.getenv("password"))>0) {
+#'   tstring = sub("\\/", "", tempfile(tmpdir=""))
+#'   dom = deleteDomain("http://170.223.248.164:7248", paste(tstring, ".hdfgroup.org", sep=""))
+#'   readBin(dom$content, what="character")
+#'   }
+#' @export
+deleteDomain = function(url, domain){
+  require(httr)
+  password = Sys.getenv("password")
+  username = Sys.getenv("username")
+  auth <- authenticate(username, password, type="basic")
+  r = DELETE(url=url, config=auth, add_headers(host=domain))
+  r
+}
+
 #' Function to create a dataset in a file with extensible dimensions
 #' @param url character string with http server url
 #' @note \url{"http://170.223.248.164:7248/datasets"}
 #' @param domain character string with domain name to be created
 #' @param type character string with dataset type like H5T_IEEE_F32LE
-#' @param shape integer array with initial dimensions of dataset
-#' @param maxdims integer array with maximum extent of each dimension or 0 for unlimited dimension
+#' @param shape numeric vector with initial dimensions of dataset
+#' @param maxdims numeric vector with maximum extent of each dimension or 0 for unlimited dimension
 #' @return r http response object
 #' @examples
 #' if (nchar(Sys.getenv("password"))>0) {
@@ -57,8 +78,22 @@ postDataset = function(url, domain, type, shape, maxdims){
 #' @param url character string with http server url
 #' @note \url{"http://170.223.248.164:7248/datasets/dsetuuid/shape"}
 #' @param domain character string with domain name to be created
-#' @param newshape integer array with new dataset new dataset shape (works for a resizeable dataset)
+#' @param newshape numeric vector with new dataset new dataset shape (works for a resizeable dataset)
 #' @return r http response object
+#' @examples
+#' #' if (nchar(Sys.getenv("password"))>0) {
+#'     tstring = sub("\\/", "", tempfile(tmpdir=""))
+#'     dom = putDomain("http://170.223.248.164:7248", paste(tstring, ".hdfgroup.org", sep=""))
+#'     ds = postDataset(url="http://170.223.248.164:7248/datasets",
+#'         domain=paste(tstring, ".hdfgroup.org", sep=""),  
+#'         type="H5T_IEEE_F32LE",
+#'         shape=c(10,5), maxdims=c(0,5))
+#'     modShape = modifyShape(url=paste0("http://170.223.248.164:7248/datasets/",dsetuuid,"/shape"),
+#'               domain=paste(tstring, ".hdfgroup.org", sep=""), newshape=c(20,5))
+#'     ans = readBin(ds$content, what="character")
+#'     ans
+#'     }
+#' @export
 modifyShape = function(url, domain, newshape){
   require(httr)
   password = Sys.getenv("password")
@@ -75,9 +110,26 @@ modifyShape = function(url, domain, newshape){
 #' @note \url{"http://170.223.248.164:7248/datasets/dsetuuid/value"}
 #' @param domain character string with domain name to be created
 #' @param value list with values to be inserted into dataset
-#' @param start (optional)integer/integer array with starting coordinate of selection to be updated
-#' @param stop (optional)integer/integer array with ending coordinate of selection to be updated
+#' @param start (optional)numeric vector with starting coordinate of selection to be updated
+#' @param stop (optional)numeric vector with ending coordinate of selection to be updated
+#' @param step (optional)numeric vector with step value
 #' @return r http response object
+#' @examples
+#' #' #' if (nchar(Sys.getenv("password"))>0) {
+#'     tstring = sub("\\/", "", tempfile(tmpdir=""))
+#'     dom = putDomain("http://170.223.248.164:7248", paste(tstring, ".hdfgroup.org", sep=""))
+#'     ds = postDataset(url="http://170.223.248.164:7248/datasets",
+#'         domain=paste(tstring, ".hdfgroup.org", sep=""),  
+#'         type="H5T_IEEE_F32LE",
+#'         shape=c(2,2), maxdims=c(0,0))
+#'     modShape = modifyShape(url=paste0("http://170.223.248.164:7248/datasets/",dsetuuid,"/shape"),
+#'               domain=paste(tstring, ".hdfgroup.org", sep=""), newshape=c(3,3))
+#'     mymat = matrix(1:12, nrow=4, ncol=4)
+#'     insertVal = putValue(url=paste0("http://170.223.248.164:7248/datasets/",dsetuuid,"/value",),
+#'                domain=paste(tstring, ".hdfgroup.org", sep=""), value=mymat,
+#'                start=c(0,0),stop=c(4,4),step=c(1,1))
+#'     }
+#' @export
 putValue = function(url, domain, value, start, stop){
   require(httr)
   password = Sys.getenv("password")
@@ -88,7 +140,7 @@ putValue = function(url, domain, value, start, stop){
     args <- list(value=value)
   }
   else{
-    args <- list(value=value, start=start, stop=stop)
+    args <- list(value=value, start=start, stop=stop, step=step)
   }
   r = PUT(url=url, body=args, config=auth, add_headers(host=domain), encode="json")
   r

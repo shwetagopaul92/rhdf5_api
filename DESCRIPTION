@@ -1,7 +1,7 @@
 Package: hswrite
 Title: use REST API to write data to HDF Cloud
 Description: use REST API to write data to HDF Cloud
-Version: 0.0.0
+Version: 0.0.1
 Author: Vince Carey
 Suggests: knitr
 Depends: httr, rjson

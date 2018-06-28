@@ -11,7 +11,7 @@ modifyShape(url, domain, newshape)
 
 \item{domain}{character string with domain name to be created}
 
-\item{newshape}{integer array with new dataset new dataset shape (works for a resizeable dataset)}
+\item{newshape}{numeric vector with new dataset new dataset shape (works for a resizeable dataset)}
 }
 \value{
 r http response object
@@ -21,4 +21,18 @@ Function to modify dataset shape
 }
 \note{
 \url{"http://170.223.248.164:7248/datasets/dsetuuid/shape"}
+}
+\examples{
+#' if (nchar(Sys.getenv("password"))>0) {
+    tstring = sub("\\\\/", "", tempfile(tmpdir=""))
+    dom = putDomain("http://170.223.248.164:7248", paste(tstring, ".hdfgroup.org", sep=""))
+    ds = postDataset(url="http://170.223.248.164:7248/datasets",
+        domain=paste(tstring, ".hdfgroup.org", sep=""),  
+        type="H5T_IEEE_F32LE",
+        shape=c(10,5), maxdims=c(0,5))
+    modShape = modifyShape(url=paste0("http://170.223.248.164:7248/datasets/",dsetuuid,"/shape"),
+              domain=paste(tstring, ".hdfgroup.org", sep=""), newshape=c(20,5))
+    ans = readBin(ds$content, what="character")
+    ans
+    }
 }

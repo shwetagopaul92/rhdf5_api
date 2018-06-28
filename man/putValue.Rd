@@ -13,9 +13,11 @@ putValue(url, domain, value, start, stop)
 
 \item{value}{list with values to be inserted into dataset}
 
-\item{start}{(optional)integer/integer array with starting coordinate of selection to be updated}
+\item{start}{(optional)numeric vector with starting coordinate of selection to be updated}
 
-\item{stop}{(optional)integer/integer array with ending coordinate of selection to be updated}
+\item{stop}{(optional)numeric vector with ending coordinate of selection to be updated}
+
+\item{step}{(optional)numeric vector with step value}
 }
 \value{
 r http response object
@@ -25,4 +27,20 @@ Function to insert values into dataset
 }
 \note{
 \url{"http://170.223.248.164:7248/datasets/dsetuuid/value"}
+}
+\examples{
+#' #' if (nchar(Sys.getenv("password"))>0) {
+    tstring = sub("\\\\/", "", tempfile(tmpdir=""))
+    dom = putDomain("http://170.223.248.164:7248", paste(tstring, ".hdfgroup.org", sep=""))
+    ds = postDataset(url="http://170.223.248.164:7248/datasets",
+        domain=paste(tstring, ".hdfgroup.org", sep=""),  
+        type="H5T_IEEE_F32LE",
+        shape=c(2,2), maxdims=c(0,0))
+    modShape = modifyShape(url=paste0("http://170.223.248.164:7248/datasets/",dsetuuid,"/shape"),
+              domain=paste(tstring, ".hdfgroup.org", sep=""), newshape=c(3,3))
+    mymat = matrix(1:12, nrow=4, ncol=4)
+    insertVal = putValue(url=paste0("http://170.223.248.164:7248/datasets/",dsetuuid,"/value",),
+               domain=paste(tstring, ".hdfgroup.org", sep=""), value=mymat,
+               start=c(0,0),stop=c(4,4),step=c(1,1))
+    }
 }

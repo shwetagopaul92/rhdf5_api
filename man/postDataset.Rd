@@ -13,9 +13,9 @@ postDataset(url, domain, type, shape, maxdims)
 
 \item{type}{character string with dataset type like H5T_IEEE_F32LE}
 
-\item{shape}{integer array with initial dimensions of dataset}
+\item{shape}{numeric vector with initial dimensions of dataset}
 
-\item{maxdims}{integer array with maximum extent of each dimension or 0 for unlimited dimension}
+\item{maxdims}{numeric vector with maximum extent of each dimension or 0 for unlimited dimension}
 }
 \value{
 r http response object
